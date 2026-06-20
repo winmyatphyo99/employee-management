@@ -2,68 +2,101 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    protected UserService $userService;
+
+    public function __construct(UserService $userService)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'name' => 'required |string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:8',
-
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)]
-        ));
-
-        $token = $user->createToken('UserToken')->accessToken;
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-            'message' => 'User Registered successfully.',
-        ], 200);
+        $this->userService = $userService;
     }
 
-
-
-    public function login(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $credentials = $request->only(['email', 'password']);
+        $user = $this->userService->register($request->validated());
 
-        if (auth()->attempt($credentials)) {
-            $user = auth()->user();
-            $token = $user->createToken('UserToken')->accessToken;
+        return response()->json([
+            'status' => true,
+            'message' => 'User registered successfully',
+            'data' => $user
+        ], 201);
+    }
 
+    public function login(LoginRequest $request)
+    {
+        $user = $this->userService->authenticate($request->validated());
+
+        if (!$user) {
             return response()->json([
-                'token' => $token,
-                'user' => $user,
-                'message' => 'User Logged in successfully',
-            ], 200);
-        } else {
-            return response()->json([
-                'message' => 'Unauthorized',
+                'status' => false,
+                'message' => 'Invalid credentials'
             ], 401);
         }
+
+        $token = $user->createToken('UserToken')->accessToken;
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Login successful',
+            'token' => $token,
+            'data' => $user
+        ]);
     }
 
-
-
-
-    public function user()
+    public function logout(Request $request)
     {
-        $user = auth()->user();
-        return response()->json(['user' => $user], 200);
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Logged out successfully'
+        ]);
+    }
+
+    public function users()
+    {
+        return response()->json([
+            'users' => $this->userService->getAll()
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = $this->userService->findById($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'user' => $user
+        ]);
+    }
+
+    public function update(UpdateUserRequest $request, $id)
+    {
+        $user = $this->userService->findById($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $user = $this->userService->update($user, $request->validated());
+
+        return response()->json([
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
     }
 }
