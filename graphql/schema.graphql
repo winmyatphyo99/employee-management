@@ -26,75 +26,47 @@ type User {
     updated_at: DateTime!
 }
 
-
 # =========================
 # QUERY
 # =========================
 
 type Query {
-    employees(first: Int!, page: Int): [Employee!]!
+
+    # EMPLOYEES (PAGINATION)
+    employees(
+        first: Int!
+        page: Int
+    ): [Employee!]!
         @paginate(model: "App\\Models\\Employee")
 
-    employee(id: ID! @eq): Employee @find(model: "App\\Models\\Employee")
+    employee(id: ID! @eq): Employee
+        @find(model: "App\\Models\\Employee")
 
+    # EMPLOYEE SEARCH (MODEL SCOPE)
     searchEmployees(
         search: String!
         first: Int!
         page: Int
-    ): EmployeePaginator!
-        @field(resolver: "App\\GraphQL\\Queries\\EmployeeQuery@search")
-    
-     users(first: Int!, page: Int): [User!]!
-        @paginate(model: "App\\Models\\User")
+    ): [Employee!]!
+        @paginate(scopes: ["search"])
 
-
-     searchUsers(
-        search: String!
+    # USERS (PAGINATION)
+    users(
         first: Int!
         page: Int
-    ): UserPaginator!
-        @field(resolver: "App\\GraphQL\\Queries\\UserQuery@search")
+    ): [User!]!
+        @paginate(model: "App\\Models\\User")
 
     user(id: ID! @eq): User
         @find(model: "App\\Models\\User")
-}
 
-# =========================
-# INPUTS
-# =========================
-
-input CreateEmployeeInput {
-    first_name: String! @rules(apply: ["required", "min:2"])
-
-    last_name: String! @rules(apply: ["required", "min:2"])
-
-    email: String!
-        @rules(apply: ["required", "email", "unique:employees,email"])
-
-    phone: String
-
-    address: String
-
-    salary: Float
-}
-
-input UpdateEmployeeInput {
-    first_name: String
-    last_name: String
-
-    email: String @rules(apply: ["email"])
-
-    phone: String
-    address: String
-    salary: Float
-}
-
-input CreateUserInput {
-    username: String! @rules(apply: ["required", "min:3"])
-
-    email: String! @rules(apply: ["required", "email", "unique:users,email"])
-
-    password: String! @rules(apply: ["required", "min:6"])
+    # USER SEARCH (MODEL SCOPE)
+    searchUsers(
+        search: String!
+        first: Int!
+        page: Int
+    ): [User!]!
+        @paginate(scopes: ["search"])
 }
 
 # =========================
@@ -102,13 +74,15 @@ input CreateUserInput {
 # =========================
 
 type Mutation {
+
     createEmployee(input: CreateEmployeeInput! @spread): Employee
         @create(model: "App\\Models\\Employee")
 
     updateEmployee(
         id: ID! @whereKey
         input: UpdateEmployeeInput! @spread
-    ): Employee @update(model: "App\\Models\\Employee")
+    ): Employee
+        @update(model: "App\\Models\\Employee")
 
     deleteEmployee(id: ID! @whereKey): Employee
         @delete(model: "App\\Models\\Employee")
@@ -119,9 +93,39 @@ type Mutation {
     updateUser(
         id: ID! @whereKey
         username: String
-        email: String @rules(apply: ["email"])
+        email: String
         password: String
-    ): User @update(model: "App\\Models\\User")
+    ): User
+        @update(model: "App\\Models\\User")
 
-    deleteUser(id: ID! @whereKey): User @delete(model: "App\\Models\\User")
+    deleteUser(id: ID! @whereKey): User
+        @delete(model: "App\\Models\\User")
+}
+
+# =========================
+# INPUTS
+# =========================
+
+input CreateEmployeeInput {
+    first_name: String!
+    last_name: String!
+    email: String!
+    phone: String
+    address: String
+    salary: Float
+}
+
+input UpdateEmployeeInput {
+    first_name: String
+    last_name: String
+    email: String
+    phone: String
+    address: String
+    salary: Float
+}
+
+input CreateUserInput {
+    username: String!
+    email: String!
+    password: String!
 }

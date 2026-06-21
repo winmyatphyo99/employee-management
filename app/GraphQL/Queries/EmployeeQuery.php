@@ -8,14 +8,7 @@ class EmployeeQuery
 {
     public function search($_, array $args)
     {
-        $search = $args['search'] ?? '';
-
-        return Employee::query()
-            ->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            })
+        return Employee::search($args['search'])
             ->paginate(
                 $args['first'],
                 ['*'],

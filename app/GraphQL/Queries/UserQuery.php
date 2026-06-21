@@ -8,15 +8,9 @@ class UserQuery
 {
     public function search($_, array $args)
     {
-        $search = $args['search'] ?? '';
-
-        return User::query()
-            ->where(function ($query) use ($search) {
-                $query->where('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            })
+        return User::search($args['search'])
             ->paginate(
-                $args['first'] ?? 10,
+                $args['first'],
                 ['*'],
                 'page',
                 $args['page'] ?? 1

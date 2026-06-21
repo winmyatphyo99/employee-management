@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Employee extends Model
 {
     use HasFactory;
-    protected $table = 'employees';
 
     protected $fillable = [
         'first_name',
@@ -18,7 +17,22 @@ class Employee extends Model
         'address',
         'salary',
     ];
+
     protected $casts = [
         'salary' => 'float',
     ];
+
+    public function scopeSearch($query, $search)
+    {
+        // safety check (Lighthouse sometimes passes array)
+        if (is_array($search)) {
+            $search = $search['search'] ?? '';
+        }
+
+        return $query->where(function ($q) use ($search) {
+            $q->where('first_name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        });
+    }
 }
