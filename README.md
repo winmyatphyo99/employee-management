@@ -1,66 +1,405 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Employee Management API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+Employee Management API is a backend application built with Laravel 11 that provides Employee Management functionality through both REST API and GraphQL.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The application supports:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+* User Authentication using Laravel Passport
+* Employee CRUD Operations
+* Employee Search with Pagination
+* Excel Import
+* Excel Export
+* GraphQL API using Lighthouse
+* Repository Pattern
+* Service Layer Pattern
+* Faker Seeder for generating 10,000 employee records
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+# Technical Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Technology         | Version |
+| ------------------ | ------- |
+| PHP                | 8.2+    |
+| Laravel            | 11      |
+| Laravel Passport   | 12      |
+| Lighthouse GraphQL | Latest  |
+| Laravel Excel      | 3.1     |
+| Faker              | 1.23    |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+# Architecture
 
-## Laravel Sponsors
+The application follows a layered architecture.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Controller Layer
 
-### Premium Partners
+→ Service Layer
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+→ Repository Layer
 
-## Contributing
+→ Database
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Example:
 
-## Code of Conduct
+EmployeeController
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+→ EmployeeService
 
-## Security Vulnerabilities
+→ EmployeeRepository
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+→ Employee Model
 
-## License
+Benefits:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* Separation of Concerns
+* Maintainability
+* Scalability
+* Testability
+
+---
+
+# Design Patterns Used
+
+## Repository Pattern
+
+Repositories abstract database operations from business logic.
+
+Example:
+
+* BaseRepository
+* EmployeeRepository
+
+Responsibilities:
+
+* CRUD operations
+* Search operations
+* Pagination
+
+---
+
+## Service Layer Pattern
+
+Services contain business logic.
+
+Example:
+
+* EmployeeService
+* UserService
+* ExcelService
+
+Responsibilities:
+
+* Authentication
+* Employee Management
+* Excel Import/Export
+
+---
+
+## Dependency Injection
+
+Laravel Service Container is used throughout the application.
+
+Example:
+
+```php
+public function __construct(
+    EmployeeService $service,
+    ExcelService $excelService
+)
+```
+
+---
+
+## Factory Pattern
+
+Factories generate test and seed data.
+
+Example:
+
+* EmployeeFactory
+* UserFactory
+
+---
+
+# Features
+
+## Authentication
+
+* Register
+* Login
+* Logout
+* Passport Access Tokens
+
+---
+
+## Employee Management
+
+* Create Employee
+* View Employee
+* Update Employee
+* Delete Employee
+* Search Employee
+* Pagination
+
+---
+
+## Excel Operations
+
+* Import Employees
+* Export Employees
+
+---
+
+## GraphQL
+
+* Authentication
+* Employee Queries
+* Employee Mutations
+* User Queries
+* User Mutations
+
+---
+
+# Installation
+
+## Clone Repository
+
+```bash
+git clone <https://github.com/winmyatphyo99/employee-management>
+
+cd employee management test
+```
+
+---
+
+## Install Dependencies
+
+```bash
+composer install
+```
+
+---
+
+## Create Environment File
+
+```bash
+cp .env.example .env
+```
+
+---
+
+## Configure Database
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=employee_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+## Run Migrations
+
+```bash
+php artisan migrate
+```
+
+---
+
+## Install Passport
+
+```bash
+php artisan passport:install
+```
+
+---
+
+## Seed Database
+
+Creates:
+
+* 1 Test User
+* 10,000 Employees
+
+```bash
+php artisan db:seed
+```
+
+---
+
+# Default Credentials
+
+Username:
+
+```text
+testuser
+```
+
+Password:
+
+```text
+password
+```
+
+---
+
+# Running Application
+
+```bash
+php artisan serve
+```
+
+Application URL:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# Authentication
+
+Protected endpoints require:
+
+```http
+Authorization: Bearer {token}
+```
+
+---
+
+# Database Seed Data
+
+## User
+
+| Field    | Value                                       |
+| -------- | ------------------------------------------- |
+| username | testuser                                    |
+| email    | [test@example.com](mailto:test@example.com) |
+| password | password                                    |
+
+---
+
+## Employees
+
+Generated automatically using Faker.
+
+Count:
+
+```text
+10000 Employees
+```
+
+Fields:
+
+* first_name
+* last_name
+* email
+* phone
+* address
+* salary
+
+---
+
+# Excel Import Format
+
+Required columns:
+
+```text
+first_name
+last_name
+email
+phone
+address
+salary
+```
+
+---
+
+# API Documentation
+
+See:
+
+docs/REST_API_DOCUMENTATION.md
+
+---
+
+# GraphQL Documentation
+
+See:
+
+docs/GRAPHQL_DOCUMENTATION.md
+
+---
+
+# Security
+
+Implemented security measures:
+
+* Laravel Passport Authentication
+* Password Hashing
+* Form Request Validation
+* Protected Routes
+* GraphQL Guards
+
+---
+
+# Performance Considerations
+
+* Pagination implemented for employee listing
+* Search filtering at database level
+* Repository abstraction
+* Import uses updateOrCreate to prevent duplicate employees
+* Faker-generated dataset contains 10,000 records
+
+---
+
+# Testing Checklist
+
+Authentication
+
+* Register User
+* Login User
+* Logout User
+
+Employees
+
+* Create Employee
+* Get Employee
+* Update Employee
+* Delete Employee
+* Search Employee
+* Pagination
+
+Excel
+
+* Import Employees
+* Export Employees
+
+GraphQL
+
+* Queries
+* Mutations
+* Authentication
+
+---
+
+# Author
+
+Employee Management Backend API
+
+Built with Laravel 11, Passport, Lighthouse GraphQL, and Laravel Excel.

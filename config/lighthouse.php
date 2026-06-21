@@ -150,6 +150,7 @@ return [
          * Not relevant when using opcache mode.
          */
         'ttl' => env('LIGHTHOUSE_QUERY_CACHE_TTL', 24 * 60 * 60),
+        'multipart_form_data' => true,
     ],
 
     /*
@@ -303,6 +304,7 @@ return [
         Nuwave\Lighthouse\Execution\AuthorizationErrorHandler::class,
         Nuwave\Lighthouse\Execution\ValidationErrorHandler::class,
         Nuwave\Lighthouse\Execution\ReportingErrorHandler::class,
+
     ],
 
     /*

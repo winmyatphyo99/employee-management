@@ -5,7 +5,10 @@ scalar DateTime
 # =========================
 # TYPES
 # =========================
-
+type AuthPayload {
+    token: String!
+    user: User!
+}
 type Employee {
     id: ID!
     first_name: String!
@@ -26,47 +29,42 @@ type User {
     updated_at: DateTime!
 }
 
+
 # =========================
 # QUERY
 # =========================
 
 type Query {
+    # Logged-in user
+    me: User @auth(guard: "api")
 
     # EMPLOYEES (PAGINATION)
-    employees(
-        first: Int!
-        page: Int
-    ): [Employee!]!
+    employees(first: Int!, page: Int): [Employee!]!
         @paginate(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
 
     employee(id: ID! @eq): Employee
         @find(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
 
     # EMPLOYEE SEARCH (MODEL SCOPE)
-    searchEmployees(
-        search: String!
-        first: Int!
-        page: Int
-    ): [Employee!]!
+    searchEmployees(search: String!, first: Int!, page: Int): [Employee!]!
         @paginate(scopes: ["search"])
+        @guard(with: ["api"])
 
     # USERS (PAGINATION)
-    users(
-        first: Int!
-        page: Int
-    ): [User!]!
+    users(first: Int!, page: Int): [User!]!
         @paginate(model: "App\\Models\\User")
+        @guard(with: ["api"])
 
     user(id: ID! @eq): User
         @find(model: "App\\Models\\User")
+        @guard(with: ["api"])
 
     # USER SEARCH (MODEL SCOPE)
-    searchUsers(
-        search: String!
-        first: Int!
-        page: Int
-    ): [User!]!
+    searchUsers(search: String!, first: Int!, page: Int): [User!]!
         @paginate(scopes: ["search"])
+        @guard(with: ["api"])
 }
 
 # =========================
@@ -74,32 +72,68 @@ type Query {
 # =========================
 
 type Mutation {
+    register(
+    username: String!
+        @rules(apply: [
+            "required",
+            "string",
+            "max:255",
+            "unique:users,username"
+        ])
+
+    email: String!
+        @rules(apply: [
+            "required",
+            "email",
+            "unique:users,email"
+        ])
+
+    password: String!
+        @rules(apply: [
+            "required",
+            "min:8"
+        ])
+): AuthPayload
+    @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@register")
+
+    login(username: String!, password: String!): AuthPayload
+        @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@login")
+
+    logout: Boolean
+        @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@logout")
+        @guard(with: ["api"])
 
     createEmployee(input: CreateEmployeeInput! @spread): Employee
         @create(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
 
     updateEmployee(
         id: ID! @whereKey
         input: UpdateEmployeeInput! @spread
-    ): Employee
-        @update(model: "App\\Models\\Employee")
+    ): Employee @update(model: "App\\Models\\Employee") @guard(with: ["api"])
 
     deleteEmployee(id: ID! @whereKey): Employee
         @delete(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
 
     createUser(input: CreateUserInput! @spread): User
         @create(model: "App\\Models\\User")
+        @guard(with: ["api"])
 
     updateUser(
         id: ID! @whereKey
         username: String
         email: String
         password: String
-    ): User
-        @update(model: "App\\Models\\User")
+    ): User @update(model: "App\\Models\\User") @guard(with: ["api"])
 
     deleteUser(id: ID! @whereKey): User
         @delete(model: "App\\Models\\User")
+        @guard(with: ["api"])
+    
+    importEmployees(file: Upload!): String
+        @field(resolver: "App\\GraphQL\\Mutations\\EmployeeMutation@importEmployees")
+        @guard(with: ["api"])
 }
 
 # =========================
@@ -108,24 +142,93 @@ type Mutation {
 
 input CreateEmployeeInput {
     first_name: String!
+        @rules(apply: ["required", "string", "max:255"])
+
     last_name: String!
+        @rules(apply: ["required", "string", "max:255"])
+
     email: String!
+        @rules(apply: [
+            "required",
+            "email",
+            "max:255",
+            "unique:employees,email"
+        ])
+
     phone: String
+        @rules(apply: [
+            "nullable",
+            "string",
+            "max:50"
+        ])
+
     address: String
+        @rules(apply: [
+            "nullable",
+            "string",
+            "max:500"
+        ])
+
     salary: Float
+        @rules(apply: [
+            "nullable",
+            "numeric",
+            "min:0"
+        ])
 }
 
 input UpdateEmployeeInput {
     first_name: String
+        @rules(apply: ["string", "max:255"])
+
     last_name: String
+        @rules(apply: ["string", "max:255"])
+
     email: String
+        @rules(apply: [
+            "email",
+            "max:255"
+        ])
+
     phone: String
+        @rules(apply: [
+            "string",
+            "max:50"
+        ])
+
     address: String
+        @rules(apply: [
+            "string",
+            "max:500"
+        ])
+
     salary: Float
+        @rules(apply: [
+            "numeric",
+            "min:0"
+        ])
 }
 
 input CreateUserInput {
     username: String!
+        @rules(apply: [
+            "required",
+            "string",
+            "max:255",
+            "unique:users,username"
+        ])
+
     email: String!
+        @rules(apply: [
+            "required",
+            "email",
+            "max:255",
+            "unique:users,email"
+        ])
+
     password: String!
+        @rules(apply: [
+            "required",
+            "min:8"
+        ])
 }
