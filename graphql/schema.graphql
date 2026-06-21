@@ -1,0 +1,117 @@
+"A datetime string with format Y-m-d H:i:s"
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+# =========================
+# TYPES
+# =========================
+
+type Employee {
+    id: ID!
+    first_name: String!
+    last_name: String!
+    email: String!
+    phone: String
+    address: String
+    salary: Float
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type User {
+    id: ID!
+    username: String!
+    email: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+# =========================
+# QUERY
+# =========================
+
+type Query {
+    employees(first: Int!, page: Int): [Employee!]!
+        @paginate(model: "App\\Models\\Employee")
+
+    employee(id: ID! @eq): Employee @find(model: "App\\Models\\Employee")
+
+    searchEmployees(
+        search: String!
+        first: Int!
+        page: Int
+    ): EmployeePaginator!
+        @field(resolver: "App\\GraphQL\\Queries\\EmployeeQuery@search")
+
+    users(first: Int!, page: Int): [User!]!
+        @paginate(model: "App\\Models\\User")
+
+    user(id: ID! @eq): User @find(model: "App\\Models\\User")
+}
+
+# =========================
+# INPUTS
+# =========================
+
+input CreateEmployeeInput {
+    first_name: String! @rules(apply: ["required", "min:2"])
+
+    last_name: String! @rules(apply: ["required", "min:2"])
+
+    email: String!
+        @rules(apply: ["required", "email", "unique:employees,email"])
+
+    phone: String
+
+    address: String
+
+    salary: Float
+}
+
+input UpdateEmployeeInput {
+    first_name: String
+    last_name: String
+
+    email: String @rules(apply: ["email"])
+
+    phone: String
+    address: String
+    salary: Float
+}
+
+input CreateUserInput {
+    username: String! @rules(apply: ["required", "min:3"])
+
+    email: String! @rules(apply: ["required", "email", "unique:users,email"])
+
+    password: String! @rules(apply: ["required", "min:6"])
+}
+
+# =========================
+# MUTATIONS
+# =========================
+
+type Mutation {
+    createEmployee(input: CreateEmployeeInput! @spread): Employee
+        @create(model: "App\\Models\\Employee")
+
+    updateEmployee(
+        id: ID! @whereKey
+        input: UpdateEmployeeInput! @spread
+    ): Employee @update(model: "App\\Models\\Employee")
+
+    deleteEmployee(id: ID! @whereKey): Employee
+        @delete(model: "App\\Models\\Employee")
+
+    createUser(input: CreateUserInput! @spread): User
+        @create(model: "App\\Models\\User")
+
+    updateUser(
+        id: ID! @whereKey
+        username: String
+        email: String @rules(apply: ["email"])
+        password: String
+    ): User @update(model: "App\\Models\\User")
+
+    deleteUser(id: ID! @whereKey): User @delete(model: "App\\Models\\User")
+}

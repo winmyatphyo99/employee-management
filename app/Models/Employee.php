@@ -18,4 +18,7 @@ class Employee extends Model
         'address',
         'salary',
     ];
+    protected $casts = [
+        'salary' => 'float',
+    ];
 }
