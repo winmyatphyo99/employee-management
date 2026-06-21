@@ -26,6 +26,7 @@ type User {
     updated_at: DateTime!
 }
 
+
 # =========================
 # QUERY
 # =========================
@@ -42,11 +43,20 @@ type Query {
         page: Int
     ): EmployeePaginator!
         @field(resolver: "App\\GraphQL\\Queries\\EmployeeQuery@search")
-
-    users(first: Int!, page: Int): [User!]!
+    
+     users(first: Int!, page: Int): [User!]!
         @paginate(model: "App\\Models\\User")
 
-    user(id: ID! @eq): User @find(model: "App\\Models\\User")
+
+     searchUsers(
+        search: String!
+        first: Int!
+        page: Int
+    ): UserPaginator!
+        @field(resolver: "App\\GraphQL\\Queries\\UserQuery@search")
+
+    user(id: ID! @eq): User
+        @find(model: "App\\Models\\User")
 }
 
 # =========================

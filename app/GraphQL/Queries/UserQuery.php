@@ -2,22 +2,21 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\Employee;
+use App\Models\User;
 
-class EmployeeQuery
+class UserQuery
 {
     public function search($_, array $args)
     {
         $search = $args['search'] ?? '';
 
-        return Employee::query()
+        return User::query()
             ->where(function ($query) use ($search) {
-                $query->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
+                $query->where('username', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
             })
             ->paginate(
-                $args['first'],
+                $args['first'] ?? 10,
                 ['*'],
                 'page',
                 $args['page'] ?? 1
