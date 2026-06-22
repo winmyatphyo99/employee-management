@@ -17,9 +17,9 @@ class StoreEmployeeRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             'last_name'  => 'required|string|max:255',
             'email'      => 'required|email|unique:employees,email',
-            'phone'      => 'nullable|string',
+            'phone' => 'nullable|regex:/^[0-9+\-\s]{7,20}$/',
             'address'    => 'nullable|string',
-            'salary'     => 'nullable|numeric',
+            'salary' => 'required|numeric|min:0',
         ];
     }
 }

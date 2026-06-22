@@ -17,6 +17,10 @@ class AuthController extends Controller
     {
         $this->userService = $userService;
     }
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
+    }
 
     public function register(RegisterRequest $request)
     {
@@ -60,11 +64,13 @@ class AuthController extends Controller
         ]);
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        return response()->json([
-            'users' => $this->userService->getAll()
-        ]);
+        return response()->json(
+            $this->userService->getAll(
+                $request->get('per_page', 10)
+            )
+        );
     }
 
     public function show($id)
@@ -97,6 +103,22 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'User updated successfully',
             'user' => $user
+        ]);
+    }
+    public function destroy($id)
+    {
+        $user = $this->userService->findById($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $this->userService->delete($user);
+
+        return response()->json([
+            'message' => 'User deleted successfully'
         ]);
     }
 }

@@ -37,14 +37,18 @@ class UserService
 
         return $user;
     }
+    public function delete(User $user): bool
+    {
+        return $user->delete();
+    }
 
     public function findById($id): ?User
     {
         return User::find($id);
     }
 
-    public function getAll()
+    public function getAll($perPage = 10)
     {
-        return User::all();
+        return User::paginate($perPage);
     }
 }
