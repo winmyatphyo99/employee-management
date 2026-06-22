@@ -315,23 +315,47 @@ Default User:
 
 ---
 
-# 📥 Excel Import Format
+## 📄 Sample Excel File
 
-Required columns:
+A sample Excel file is included for testing employee import functionality.
+
+Location:
 
 ```text
-first_name
-last_name
-email
-phone
-address
-salary
+docs/employees.xlsx
 ```
 
-Supported formats:
+Supported columns:
 
-* .xlsx
-* .csv
+| Column     |
+| ---------- |
+| first_name |
+| last_name  |
+| email      |
+| phone      |
+| address    |
+| salary     |
+
+Example API:
+
+```http
+POST /api/employees/import
+```
+
+Content-Type:
+
+```text
+multipart/form-data
+```
+
+Form Data:
+
+| Key  | Type |
+| ---- | ---- |
+| file | File |
+
+Use the provided `employees.xlsx` file to test employee import functionality.
+
 
 ---
 
