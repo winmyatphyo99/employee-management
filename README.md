@@ -166,7 +166,7 @@ Used for generating test data.
 ## Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/winmyatphyo99/employee-management.git>
 cd employee management test
 ```
 
