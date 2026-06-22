@@ -26,12 +26,11 @@ This document describes the GraphQL API for the Employee Management System built
 8. User Mutations
 9. Employee Mutations
 10. Search Operations
-11. File Upload Operations
-12. GraphQL Types
-13. Validation Rules
-14. Security
-15. Error Handling
-16. Notes
+11. GraphQL Types
+11. Validation Rules
+13. Security
+14. Error Handling
+15. Notes
 
 ---
 
@@ -637,37 +636,6 @@ query {
   }
 }
 ```
-
----
-
-# File Upload Operations
-
-## Import Employees (Excel)
-
-### Mutation
-
-```graphql
-mutation ($file: Upload!) {
-  importEmployees(file: $file)
-}
-```
-
-### Variables
-
-```json
-{
-  "file": null
-}
-```
-
-### Supported Formats
-
-```text
-.xlsx
-.xls
-.csv
-```
-
 ---
 
 # GraphQL Types
@@ -783,7 +751,7 @@ Example Response:
     }
   ]
 }
-}
+
 ```
 
 ---
