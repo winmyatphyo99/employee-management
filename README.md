@@ -1,30 +1,90 @@
 # 🚀 Employee Management System API
 
-A backend system built with **Laravel 11** providing both **REST API** and **GraphQL API** for managing employees and users with authentication, search, pagination, and Excel operations.
+A backend Employee Management System built with **Laravel 11** that provides both **REST API** and **GraphQL API** for managing users and employees, including authentication, search, pagination, and Excel import/export functionality.
+
+---
+
+# 📋 Table of Contents
+
+* Overview
+* Features
+* Technology Stack
+* System Architecture
+* Design Patterns
+* Installation
+* Configuration
+* API Endpoints
+* Authentication
+* Database Seeding
+* Excel Operations
+* Performance Optimizations
+* Security Features
+* Testing Checklist
+* Documentation
 
 ---
 
 # 📌 Overview
 
-This system provides:
+This project was developed to demonstrate:
 
-* 🔐 Authentication (Laravel Passport)
-* 👤 User Management
-* 👨‍💼 Employee CRUD Operations
-* 🔎 Advanced Search + Pagination
-* 📊 Excel Import / Export
-* 📡 GraphQL API (Lighthouse)
-* 🧱 Clean Architecture (Service + Repository Pattern)
+* REST API Development
+* GraphQL API Development
+* Laravel Passport Authentication
+* Repository Pattern
+* Service Layer Architecture
+* Excel Import/Export Operations
+* Large Dataset Handling
 
 ---
 
-# 🧰 Tech Stack
+# ✨ Features
+
+## Authentication
+
+* User Registration
+* User Login
+* User Logout
+* Laravel Passport Token Authentication
+
+## User Management
+
+* Create User
+* View User
+* Update User
+* Delete User
+
+## Employee Management
+
+* Create Employee
+* View Employee
+* Update Employee
+* Delete Employee
+* Search Employees
+* Pagination Support
+
+## Excel Operations
+
+* Import Employees from Excel/CSV
+* Export Employees to Excel
+
+## GraphQL Features
+
+* Queries
+* Mutations
+* Authentication Support
+* Pagination
+* File Upload Support
+
+---
+
+# 🛠 Technology Stack
 
 | Technology         | Version |
 | ------------------ | ------- |
 | PHP                | 8.2+    |
 | Laravel            | 11      |
-| Passport           | 12      |
+| Laravel Passport   | 12      |
 | Lighthouse GraphQL | Latest  |
 | Laravel Excel      | 3.1     |
 | Faker              | 1.23    |
@@ -33,42 +93,43 @@ This system provides:
 
 # 🏗 System Architecture
 
-```
+```text
 Controller
-   ↓
+    ↓
 Service Layer
-   ↓
+    ↓
 Repository Layer
-   ↓
+    ↓
 Database
 ```
 
-### Example Flow
+### Employee Module Flow
 
-```
+```text
 EmployeeController
-   ↓
+    ↓
 EmployeeService
-   ↓
+    ↓
 EmployeeRepository
-   ↓
+    ↓
 Employee Model
 ```
 
-### Benefits
+## Benefits
 
-* Separation of concerns
-* Scalable structure
-* Easy testing
-* Maintainable codebase
+* Separation of Concerns
+* Maintainable Codebase
+* Reusable Business Logic
+* Easier Unit Testing
+* Scalable Architecture
 
 ---
 
-# 🧩 Design Patterns
+# 🎯 Design Patterns
 
 ## Repository Pattern
 
-Handles all database operations.
+Responsible for database interactions.
 
 * BaseRepository
 * EmployeeRepository
@@ -76,7 +137,7 @@ Handles all database operations.
 
 ## Service Layer Pattern
 
-Handles business logic.
+Responsible for business logic.
 
 * EmployeeService
 * UserService
@@ -93,118 +154,164 @@ public function __construct(
 
 ## Factory Pattern
 
-Used for test data generation:
+Used for generating test data.
 
 * EmployeeFactory
 * UserFactory
 
 ---
 
-# ⚡ Features
+# ⚙ Installation
 
-## 🔐 Authentication
+## Clone Repository
 
-* Register
-* Login
-* Logout
-* Passport Token Authentication
-
----
-
-## 👨‍💼 Employee Management
-
-* Create Employee
-* Read Employee
-* Update Employee
-* Delete Employee
-* Search Employees
-* Pagination
-
----
-
-## 📊 Excel Features
-
-* Import Employees (.xlsx / .csv)
-* Export Employees
-
----
-
-## 📡 GraphQL API
-
-* Authentication Mutations
-* User Queries & Mutations
-* Employee Queries & Mutations
-* Search Operations
-
----
-
-# 🌐 API Overview
-
-## REST API Base URL
-
+```bash
+git clone <repository-url>
+cd employee management test
 ```
+
+## Install Dependencies
+
+```bash
+composer install
+```
+
+## Environment Setup
+
+```bash
+cp .env.example .env
+```
+
+Generate application key:
+
+```bash
+php artisan key:generate
+```
+
+Configure database credentials in `.env`.
+
+---
+
+# 🗄 Database Configuration
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=employee_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+# 🔐 Passport Setup
+
+Install Passport:
+
+```bash
+php artisan passport:install
+```
+
+Authentication guard:
+
+```php
+'api' => [
+    'driver' => 'passport',
+    'provider' => 'users',
+],
+```
+
+---
+
+# 🚀 Running the Application
+
+Run migrations:
+
+```bash
+php artisan migrate
+```
+
+Seed database:
+
+```bash
+php artisan db:seed
+```
+
+Start server:
+
+```bash
+php artisan serve
+```
+
+Application will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# 🌐 API Endpoints
+
+## REST API
+
+```text
 http://127.0.0.1:8000/api
 ```
 
 ## GraphQL Endpoint
 
-```
+```text
 http://127.0.0.1:8000/graphql
 ```
 
-## Playground
+## GraphQL Playground
 
-```
+```text
 http://127.0.0.1:8000/graphql-playground
 ```
 
----
+<!-- ## Swagger Documentation
 
-# 📘 API Documentation
-
-Full API documentation:
-
-* REST API → `docs/REST_API_DOCUMENTATION.md`
-* GraphQL → `docs/GRAPHQL_DOCUMENTATION.md`
-* Sample Excel File → `/docs/employees.xlsx`
+```text
+http://127.0.0.1:8000/api/documentation
+``` -->
 
 ---
 
 # 🔐 Authentication
 
-All protected endpoints require:
+Protected endpoints require:
 
 ```http
 Authorization: Bearer {token}
 ```
 
+Authentication Flow:
+
+1. Register
+2. Login
+3. Receive Access Token
+4. Access Protected Resources
+5. Logout
+
 ---
 
-# 🧪 Default Test User
+# 📊 Database Seeding
+
+The application seeds:
+
+* 1 Default User
+* 10,000 Employee Records
+
+Default User:
 
 | Field    | Value                                       |
 | -------- | ------------------------------------------- |
 | Username | testuser                                    |
-| Password | password                                    |
 | Email    | [test@example.com](mailto:test@example.com) |
-
----
-
-# 📦 Database Seed
-
-* 👤 1 Default User
-* 👨‍💼 10,000 Employees (Faker generated)
-
----
-
-# 📊 Employee Fields
-
-* first_name
-* last_name
-* email
-* phone
-* address
-* salary
+| Password | password                                    |
 
 ---
 
@@ -212,7 +319,7 @@ Authorization: Bearer {token}
 
 Required columns:
 
-```
+```text
 first_name
 last_name
 email
@@ -221,25 +328,32 @@ address
 salary
 ```
 
+Supported formats:
+
+* .xlsx
+* .csv
+
 ---
 
-# 🔐 Security
+# 📈 Performance Optimizations
+
+* Pagination for Large Datasets
+* Indexed Search Queries
+* Repository Abstraction Layer
+* Efficient Bulk Imports
+* Optimized Seeder for 10,000+ Records
+* Lighthouse Batch Loading
+
+---
+
+# 🛡 Security Features
 
 * Laravel Passport Authentication
 * Password Hashing
 * Request Validation
 * Protected Routes
-* GraphQL Guards
-
----
-
-# ⚙ Performance Design
-
-* Pagination for large datasets
-* Indexed search queries
-* Repository abstraction layer
-* Efficient import (updateOrCreate)
-* Seeder optimized for bulk data
+* GraphQL Authorization Guards
+* Token-Based Authentication
 
 ---
 
@@ -251,30 +365,53 @@ salary
 * Login
 * Logout
 
-## Employees
+## Employee Management
 
-* Create
-* Read
-* Update
-* Delete
-* Search
+* Create Employee
+* View Employee
+* Update Employee
+* Delete Employee
+* Search Employees
 * Pagination
 
 ## Excel
 
-* Import
-* Export
+* Import Employees
+* Export Employees
 
 ## GraphQL
 
 * Queries
 * Mutations
-* Auth flow
+* Authentication Flow
+
+---
+
+# 📚 Documentation
+
+Additional documentation:
+
+```text
+docs/REST_API_DOCUMENTATION.md
+docs/GRAPHQL_DOCUMENTATION.md
+docs/employees.xlsx
+```
 
 ---
 
 # 👨‍💻 Author
 
-Built with Laravel 11 + Passport + Lighthouse GraphQL + Laravel Excel
+Employee Management System API
 
-Employee Management Backend System
+Built with:
+
+* Laravel 11
+* Laravel Passport
+* Lighthouse GraphQL
+* Laravel Excel
+
+---
+
+# 📄 License
+
+This project is developed for educational and assessment purposes.
