@@ -419,6 +419,7 @@ Additional documentation:
 docs/REST_API_DOCUMENTATION.md
 docs/GRAPHQL_DOCUMENTATION.md
 docs/employees.xlsx
+docs/Employee Management.postman_collection.json
 ```
 
 ---
