@@ -125,11 +125,11 @@ mutation {
 {
   "data": {
     "register": {
-      "token": "token_here",
+      "token": "token here",
       "user": {
-        "id": "1",
-        "username": "john",
-        "email": "john@example.com"
+        "id": "21",
+        "username": "johnson",
+        "email": "johnson@example.com"
       }
     }
   }
@@ -143,7 +143,7 @@ mutation {
 ```graphql
 mutation {
   login(
-    username: "john"
+    username: "johnson"
     password: "password123"
   ) {
     token
@@ -151,6 +151,22 @@ mutation {
       id
       username
       email
+    }
+  }
+}
+```
+### Response
+
+```json
+{
+  "data": {
+    "login": {
+      "token": "token here",
+      "user": {
+        "id": "21",
+        "username": "johnson",
+        "email": "johnson@example.com"
+      }
     }
   }
 }
@@ -180,7 +196,7 @@ mutation {
 
 # User Queries
 
-## Get Current User
+## Get Authenticated User
 
 ```graphql
 query {
@@ -191,7 +207,19 @@ query {
   }
 }
 ```
+### Response
 
+```json
+{
+  "data": {
+    "me": {
+      "id": "21",
+      "username": "johnson",
+      "email": "johnson@example.com"
+    }
+  }
+}
+```
 ---
 
 ## Get All Users
@@ -213,14 +241,81 @@ query {
   }
 }
 ```
+### Response
 
+```json
+{
+  "data": {
+    "users": {
+      "paginatorInfo": {
+        "currentPage": 1,
+        "lastPage": 2,
+        "total": 14,
+        "count": 10
+      },
+      "data": [
+        {
+          "id": "3",
+          "username": "superadmin4",
+          "email": "superadmin1235@gmail.com"
+        },
+        {
+          "id": "6",
+          "username": "hradmin4",
+          "email": "hr@admin4.com"
+        },
+        {
+          "id": "7",
+          "username": "hradmin5",
+          "email": "hr@admin5.com"
+        },
+        {
+          "id": "8",
+          "username": "hradmin6",
+          "email": "hr@admin6.com"
+        },
+        {
+          "id": "9",
+          "username": "hradmin7",
+          "email": "hr@admin7.com"
+        },
+        {
+          "id": "10",
+          "username": "admin",
+          "email": "admin123@gmail.com"
+        },
+        {
+          "id": "11",
+          "username": "superadmin",
+          "email": "superadmin@test.com"
+        },
+        {
+          "id": "12",
+          "username": "testuserwin",
+          "email": "testbywinmyatphyo@mail.com"
+        },
+        {
+          "id": "15",
+          "username": "testuserwinmyat",
+          "email": "testbywinmyatphyo232@mail.com"
+        },
+        {
+          "id": "16",
+          "username": "testuserwinmyatphyo",
+          "email": "testbywinmyatphyo2325@mail.com"
+        }
+      ]
+    }
+  }
+}
+```
 ---
 
 ## Get User By ID
 
 ```graphql
 query {
-  user(id: 1) {
+  user(id: 10) {
     id
     username
     email
@@ -229,7 +324,21 @@ query {
   }
 }
 ```
+### Response
 
+```json
+{
+  "data": {
+    "user": {
+      "id": "10",
+      "username": "admin",
+      "email": "admin123@gmail.com",
+      "created_at": "2026-06-21 03:56:18",
+      "updated_at": "2026-06-21 03:56:18"
+    }
+  }
+}
+```
 ---
 
 ## Search Users
@@ -237,7 +346,7 @@ query {
 ```graphql
 query {
   searchUsers(
-    search: "john"
+    search: "johnson"
     first: 10
     page: 1
   ) {
@@ -252,7 +361,26 @@ query {
   }
 }
 ```
+### Response
 
+```json
+{
+  "data": {
+    "searchUsers": {
+      "paginatorInfo": {
+        "total": 1
+      },
+      "data": [
+        {
+          "id": "21",
+          "username": "johnson",
+          "email": "johnson@example.com"
+        }
+      ]
+    }
+  }
+}
+```
 ---
 
 # Employee Queries
