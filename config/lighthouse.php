@@ -51,6 +51,11 @@ return [
         // 'domain' => '',
         // 'where' => [],
     ],
+    'playground' => [
+        'enabled' => true,
+        'uri' => '/graphql-playground',
+    ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -214,6 +219,10 @@ return [
         'scalars' => 'App\\GraphQL\\Scalars',
         'directives' => 'App\\GraphQL\\Directives',
         'validators' => 'App\\GraphQL\\Validators',
+    ],
+    'scalars' => [
+        'Upload' => \Nuwave\Lighthouse\Schema\Types\Scalars\Upload::class,
+        'DateTime' => \Nuwave\Lighthouse\Schema\Types\Scalars\DateTime::class,
     ],
 
     /*

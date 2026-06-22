@@ -1,24 +1,38 @@
-# REST API Documentation
+# 📘 REST API Documentation
 
-## Base URL
+## Employee Management System
 
-```text
-http://localhost:8000/api
+Laravel 11 + Passport Authentication + Laravel Excel
+
+---
+
+# Base URL
+
+```http
+http://127.0.0.1:8000/api
 ```
 
 ---
 
 # Authentication
 
-## Register
+Protected routes require:
 
-Endpoint
+```http
+Authorization: Bearer {token}
+```
+
+---
+
+# Auth Endpoints
+
+## Register
 
 ```http
 POST /register
 ```
 
-Request
+Request:
 
 ```json
 {
@@ -28,46 +42,20 @@ Request
 }
 ```
 
-Success Response
-
-```json
-{
-  "status": true,
-  "message": "User registered successfully",
-  "data": {
-    "id": 1,
-    "username": "john",
-    "email": "john@example.com"
-  }
-}
-```
-
 ---
 
 ## Login
-
-Endpoint
 
 ```http
 POST /login
 ```
 
-Request
+Request:
 
 ```json
 {
-  "username": "testuser",
-  "password": "password"
-}
-```
-
-Response
-
-```json
-{
-  "status": true,
-  "message": "Login successful",
-  "token": "passport_access_token"
+  "username": "john",
+  "password": "password123"
 }
 ```
 
@@ -75,25 +63,13 @@ Response
 
 ## Logout
 
-Endpoint
-
 ```http
 POST /logout
 ```
 
-Headers
-
-```http
-Authorization: Bearer TOKEN
-```
-
 ---
 
-# User APIs
-
-All routes require authentication.
-
----
+# User Endpoints
 
 ## Get All Users
 
@@ -109,7 +85,7 @@ GET /users
 GET /users/{id}
 ```
 
-Example
+Example:
 
 ```http
 GET /users/1
@@ -123,38 +99,24 @@ GET /users/1
 PUT /users/{id}
 ```
 
-Request
+Example:
 
 ```json
 {
-  "username":"updateduser",
-  "email":"updated@example.com"
+  "username": "updateduser",
+  "email": "updated@example.com"
 }
 ```
 
 ---
 
-# Employee APIs
+# Employee Endpoints
 
-All routes require authentication.
-
----
-
-## Get Employees
+## Get All Employees
 
 ```http
 GET /employees
 ```
-
-Optional Query Parameters
-
-```http
-?page=1
-
-?search=john
-```
-
-Returns paginated employees.
 
 ---
 
@@ -164,10 +126,10 @@ Returns paginated employees.
 GET /employees/{id}
 ```
 
-Example
+Example:
 
 ```http
-GET /employees/100
+GET /employees/1
 ```
 
 ---
@@ -178,16 +140,16 @@ GET /employees/100
 POST /employees
 ```
 
-Request
+Request:
 
 ```json
 {
-  "first_name":"John",
-  "last_name":"Doe",
-  "email":"john@example.com",
-  "phone":"09123456789",
-  "address":"Yangon",
-  "salary":2500
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com",
+  "phone": "091111111",
+  "address": "Yangon",
+  "salary": 2500
 }
 ```
 
@@ -199,11 +161,12 @@ Request
 PUT /employees/{id}
 ```
 
-Request
+Request:
 
 ```json
 {
-  "salary":3000
+  "first_name": "Updated Name",
+  "salary": 3500
 }
 ```
 
@@ -215,33 +178,18 @@ Request
 DELETE /employees/{id}
 ```
 
----
-
-## Import Employees
+Example:
 
 ```http
-POST /employees/import
+DELETE /employees/1
 ```
 
-Content-Type
+---
 
-```text
-multipart/form-data
-```
+## Search Employee
 
-Body
-
-```text
-file = employees.xlsx
-```
-
-Response
-
-```json
-{
-  "status": true,
-  "message": "Imported successfully"
-}
+```http
+GET /employees/search?search=john
 ```
 
 ---
@@ -252,17 +200,67 @@ Response
 GET /employees/export
 ```
 
-Downloads
+Response:
 
 ```text
-employees.xlsx
+Excel File Download
 ```
 
 ---
 
-# Authorization Header
+## Import Employees
 
-All protected routes require:
+```http
+POST /employees/import
+```
+
+Content-Type:
+
+```http
+multipart/form-data
+```
+
+Body:
+
+```text
+file: employees.xlsx
+```
+
+Supported:
+
+```text
+.xlsx
+.xls
+.csv
+```
+
+---
+
+# Validation
+
+Supported validations:
+
+```text
+required
+string
+email
+unique
+numeric
+min
+max
+```
+
+---
+
+# Security
+
+Authentication:
+
+```text
+Laravel Passport
+```
+
+Header:
 
 ```http
 Authorization: Bearer {token}
@@ -270,13 +268,14 @@ Authorization: Bearer {token}
 
 ---
 
-# HTTP Status Codes
+# Notes
 
-| Status | Meaning          |
-| ------ | ---------------- |
-| 200    | Success          |
-| 201    | Created          |
-| 401    | Unauthorized     |
-| 404    | Not Found        |
-| 422    | Validation Error |
-| 500    | Server Error     |
+* Repository Pattern
+* Service Layer Pattern
+* Passport Authentication
+* Employee Search
+* Pagination Support
+* Excel Import
+* Excel Export
+* Faker Seeders
+* Approximately 10,000 employee records

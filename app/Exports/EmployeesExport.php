@@ -3,14 +3,14 @@
 namespace App\Exports;
 
 use App\Models\Employee;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class EmployeesExport implements FromCollection, WithHeadings
+class EmployeesExport implements FromQuery, WithHeadings
 {
-    public function collection()
+    public function query()
     {
-        return Employee::select(
+        return Employee::query()->select(
             'id',
             'first_name',
             'last_name',
@@ -18,7 +18,7 @@ class EmployeesExport implements FromCollection, WithHeadings
             'phone',
             'address',
             'salary'
-        )->get();
+        );
     }
 
     public function headings(): array

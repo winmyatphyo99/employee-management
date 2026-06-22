@@ -5,6 +5,7 @@ namespace App\Services;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\EmployeesExport;
 use App\Imports\EmployeesImport;
+use Illuminate\Support\Facades\Log;
 
 class ExcelService
 {
@@ -15,6 +16,12 @@ class ExcelService
 
     public function importEmployees($file)
     {
-        Excel::import(new EmployeesImport, $file);
+        try {
+            Excel::import(new EmployeesImport, $file);
+        } catch (\Exception $e) {
+            Log::error('Employee Import Failed: ' . $e->getMessage());
+
+            throw new \Exception('Employee import failed. Please check file format.');
+        }
     }
 }

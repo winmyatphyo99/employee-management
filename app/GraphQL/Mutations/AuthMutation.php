@@ -26,14 +26,11 @@ class AuthMutation
 
     public function login($_, array $args)
     {
-        if (!Auth::attempt([
-            'username' => $args['username'],
-            'password' => $args['password'],
-        ])) {
+        $user = User::where('username', $args['username'])->first();
+
+        if (!$user || !Hash::check($args['password'], $user->password)) {
             throw new \Exception('Invalid credentials');
         }
-
-        $user = Auth::user();
 
         $token = $user->createToken('graphql')->accessToken;
 

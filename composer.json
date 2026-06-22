@@ -11,6 +11,7 @@
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^3.1",
         "mll-lab/laravel-graphiql": "^4.1",
+        "mll-lab/laravel-graphql-playground": "^1.1",
         "nuwave/lighthouse": "*"
     },
     "require-dev": {

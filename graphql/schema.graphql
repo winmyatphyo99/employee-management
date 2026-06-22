@@ -1,14 +1,24 @@
-"A datetime string with format Y-m-d H:i:s"
+"""
+A datetime string with format Y-m-d H:i:s
+"""
 scalar DateTime
-    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"""
+File upload scalar
+"""
+scalar Upload
+  @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 # =========================
 # TYPES
 # =========================
+
 type AuthPayload {
     token: String!
     user: User!
 }
+
 type Employee {
     id: ID!
     first_name: String!
@@ -29,16 +39,18 @@ type User {
     updated_at: DateTime!
 }
 
+type ImportResponse {
+    success: Boolean!
+    message: String!
+}
 
 # =========================
 # QUERY
 # =========================
 
 type Query {
-    # Logged-in user
     me: User @auth(guard: "api")
 
-    # EMPLOYEES (PAGINATION)
     employees(first: Int!, page: Int): [Employee!]!
         @paginate(model: "App\\Models\\Employee")
         @guard(with: ["api"])
@@ -47,12 +59,10 @@ type Query {
         @find(model: "App\\Models\\Employee")
         @guard(with: ["api"])
 
-    # EMPLOYEE SEARCH (MODEL SCOPE)
     searchEmployees(search: String!, first: Int!, page: Int): [Employee!]!
         @paginate(scopes: ["search"])
         @guard(with: ["api"])
 
-    # USERS (PAGINATION)
     users(first: Int!, page: Int): [User!]!
         @paginate(model: "App\\Models\\User")
         @guard(with: ["api"])
@@ -61,7 +71,6 @@ type Query {
         @find(model: "App\\Models\\User")
         @guard(with: ["api"])
 
-    # USER SEARCH (MODEL SCOPE)
     searchUsers(search: String!, first: Int!, page: Int): [User!]!
         @paginate(scopes: ["search"])
         @guard(with: ["api"])
@@ -72,29 +81,31 @@ type Query {
 # =========================
 
 type Mutation {
+
+    # AUTH
     register(
-    username: String!
-        @rules(apply: [
-            "required",
-            "string",
-            "max:255",
-            "unique:users,username"
-        ])
+        username: String!
+            @rules(apply: [
+                "required",
+                "string",
+                "max:255",
+                "unique:users,username"
+            ])
 
-    email: String!
-        @rules(apply: [
-            "required",
-            "email",
-            "unique:users,email"
-        ])
+        email: String!
+            @rules(apply: [
+                "required",
+                "email",
+                "unique:users,email"
+            ])
 
-    password: String!
-        @rules(apply: [
-            "required",
-            "min:8"
-        ])
-): AuthPayload
-    @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@register")
+        password: String!
+            @rules(apply: [
+                "required",
+                "min:8"
+            ])
+    ): AuthPayload
+        @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@register")
 
     login(username: String!, password: String!): AuthPayload
         @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@login")
@@ -103,6 +114,7 @@ type Mutation {
         @field(resolver: "App\\GraphQL\\Mutations\\AuthMutation@logout")
         @guard(with: ["api"])
 
+    # EMPLOYEE CRUD
     createEmployee(input: CreateEmployeeInput! @spread): Employee
         @create(model: "App\\Models\\Employee")
         @guard(with: ["api"])
@@ -110,12 +122,15 @@ type Mutation {
     updateEmployee(
         id: ID! @whereKey
         input: UpdateEmployeeInput! @spread
-    ): Employee @update(model: "App\\Models\\Employee") @guard(with: ["api"])
+    ): Employee
+        @update(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
 
     deleteEmployee(id: ID! @whereKey): Employee
         @delete(model: "App\\Models\\Employee")
         @guard(with: ["api"])
 
+    # USER CRUD
     createUser(input: CreateUserInput! @spread): User
         @create(model: "App\\Models\\User")
         @guard(with: ["api"])
@@ -125,19 +140,18 @@ type Mutation {
         username: String
         email: String
         password: String
-    ): User @update(model: "App\\Models\\User") @guard(with: ["api"])
+    ): User
+        @update(model: "App\\Models\\User")
+        @guard(with: ["api"])
 
     deleteUser(id: ID! @whereKey): User
         @delete(model: "App\\Models\\User")
         @guard(with: ["api"])
-    
-    importEmployees(file: Upload!): String
-        @field(resolver: "App\\GraphQL\\Mutations\\EmployeeMutation@importEmployees")
-        @guard(with: ["api"])
+
 }
 
 # =========================
-# INPUTS
+# INPUTS (IMPORTANT: ONLY ONCE)
 # =========================
 
 input CreateEmployeeInput {
@@ -156,25 +170,13 @@ input CreateEmployeeInput {
         ])
 
     phone: String
-        @rules(apply: [
-            "nullable",
-            "string",
-            "max:50"
-        ])
+        @rules(apply: ["nullable", "string", "max:50"])
 
     address: String
-        @rules(apply: [
-            "nullable",
-            "string",
-            "max:500"
-        ])
+        @rules(apply: ["nullable", "string", "max:500"])
 
     salary: Float
-        @rules(apply: [
-            "nullable",
-            "numeric",
-            "min:0"
-        ])
+        @rules(apply: ["nullable", "numeric", "min:0"])
 }
 
 input UpdateEmployeeInput {
@@ -185,28 +187,16 @@ input UpdateEmployeeInput {
         @rules(apply: ["string", "max:255"])
 
     email: String
-        @rules(apply: [
-            "email",
-            "max:255"
-        ])
+        @rules(apply: ["email", "max:255"])
 
     phone: String
-        @rules(apply: [
-            "string",
-            "max:50"
-        ])
+        @rules(apply: ["string", "max:50"])
 
     address: String
-        @rules(apply: [
-            "string",
-            "max:500"
-        ])
+        @rules(apply: ["string", "max:500"])
 
     salary: Float
-        @rules(apply: [
-            "numeric",
-            "min:0"
-        ])
+        @rules(apply: ["numeric", "min:0"])
 }
 
 input CreateUserInput {
@@ -232,3 +222,274 @@ input CreateUserInput {
             "min:8"
         ])
 }
+# ⚙️ System Configuration
+
+This project is configured using Laravel 11 with Passport authentication and Lighthouse GraphQL.
+
+---
+
+# 📄 Environment Configuration (.env)
+
+Create environment file:
+
+```bash
+cp .env.example .env
+```
+
+---
+
+# 🧠 Application Settings
+
+```env
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:ANYGEl/E6orYyuUkaSZKp6Cm4PpOYuYKdaBnANJxx5A=
+APP_DEBUG=true
+APP_TIMEZONE=UTC
+APP_URL=http://localhost
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+```
+
+---
+
+# 🔐 Authentication Configuration (Passport)
+
+```env
+AUTH_GUARD=api
+```
+
+### Guard Setup
+
+* Default guard: `api`
+* Driver: `passport`
+* Provider: `users`
+
+Configured in:
+
+```text
+config/auth.php
+```
+
+---
+
+# 🗄️ Database Configuration
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=employee_management
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+# 🧾 Session & Cache Configuration
+
+```env
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+```
+
+---
+
+# 📂 File Storage Configuration
+
+```env
+FILESYSTEM_DISK=local
+```
+
+Used for:
+
+* Excel Import
+* Excel Export
+
+---
+
+# 📡 GraphQL (Lighthouse) Configuration
+
+## Endpoint
+
+```http
+POST /graphql
+```
+
+## Playground
+
+```http
+http://127.0.0.1:8000/graphql-playground
+```
+
+---
+
+## Key Lighthouse Settings
+
+### Route Configuration
+
+```php
+'route' => [
+    'uri' => '/graphql',
+    'name' => 'graphql',
+]
+```
+
+### Playground Enabled
+
+```php
+'playground' => [
+    'enabled' => true,
+    'uri' => '/graphql-playground',
+],
+```
+
+---
+
+## Authentication Guard (GraphQL)
+
+```php
+'guard' => 'api',
+```
+
+---
+
+## Scalars Used
+
+```php
+'Upload' => Upload Scalar (for Excel import)
+'DateTime' => DateTime Scalar
+```
+
+---
+
+## Security Settings
+
+```php
+'disable_introspection' => false
+```
+
+(Enabled for development and testing)
+
+---
+
+## Query Features Enabled
+
+* Pagination
+* Query caching
+* Validation caching
+* Batch loading relations
+* Transactional mutations
+
+---
+
+# 🔐 Laravel Auth Configuration
+
+## Guards
+
+```php
+'api' => [
+    'driver' => 'passport',
+    'provider' => 'users',
+],
+```
+
+## Default Guard
+
+```php
+'guard' => 'api'
+```
+
+---
+
+## Password Configuration
+
+```php
+'passwords' => [
+    'users' => [
+        'expire' => 60,
+        'throttle' => 60,
+    ],
+],
+```
+
+---
+
+# 📊 Performance Configuration
+
+```env
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+```
+
+Features:
+
+* Pagination for large datasets
+* Optimized search queries
+* Batch loading relations (Lighthouse)
+* Seeder optimized for 10,000+ records
+
+---
+
+# 📧 Mail Configuration (Development Mode)
+
+```env
+MAIL_MAILER=log
+MAIL_HOST=127.0.0.1
+MAIL_PORT=2525
+```
+
+Used only for logging email outputs.
+
+---
+
+# 🌐 CORS (API Access)
+
+Ensure API access for frontend tools:
+
+```php
+'paths' => ['api/*', 'graphql'],
+'allowed_methods' => ['*'],
+'allowed_origins' => ['*'],
+```
+
+---
+
+# 🚀 Final Setup Commands
+
+After configuration:
+
+```bash
+composer install
+php artisan key:generate
+php artisan migrate
+php artisan passport:install
+php artisan db:seed
+php artisan serve
+```
+
+---
+
+# 🌍 Application URLs
+
+| Service    | URL                                      |
+| ---------- | ---------------------------------------- |
+| API Base   | http://127.0.0.1:8000/api                |
+| GraphQL    | http://127.0.0.1:8000/graphql            |
+| Playground | http://127.0.0.1:8000/graphql-playground |
+
+---
+
+# 📌 Summary
+
+This configuration supports:
+
+* Laravel Passport Authentication
+* GraphQL API via Lighthouse
+* REST API support
+* Excel Import/Export
+* Database-driven sessions & cache
+* Scalable architecture (Repository + Service pattern)

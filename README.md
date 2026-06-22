@@ -1,280 +1,178 @@
-# Employee Management API
+# 🚀 Employee Management System API
 
-## Overview
-
-Employee Management API is a backend application built with Laravel 11 that provides Employee Management functionality through both REST API and GraphQL.
-
-The application supports:
-
-* User Authentication using Laravel Passport
-* Employee CRUD Operations
-* Employee Search with Pagination
-* Excel Import
-* Excel Export
-* GraphQL API using Lighthouse
-* Repository Pattern
-* Service Layer Pattern
-* Faker Seeder for generating 10,000 employee records
+A backend system built with **Laravel 11** providing both **REST API** and **GraphQL API** for managing employees and users with authentication, search, pagination, and Excel operations.
 
 ---
 
-# Technical Stack
+# 📌 Overview
+
+This system provides:
+
+* 🔐 Authentication (Laravel Passport)
+* 👤 User Management
+* 👨‍💼 Employee CRUD Operations
+* 🔎 Advanced Search + Pagination
+* 📊 Excel Import / Export
+* 📡 GraphQL API (Lighthouse)
+* 🧱 Clean Architecture (Service + Repository Pattern)
+
+---
+
+# 🧰 Tech Stack
 
 | Technology         | Version |
 | ------------------ | ------- |
 | PHP                | 8.2+    |
 | Laravel            | 11      |
-| Laravel Passport   | 12      |
+| Passport           | 12      |
 | Lighthouse GraphQL | Latest  |
 | Laravel Excel      | 3.1     |
 | Faker              | 1.23    |
 
 ---
 
-# Architecture
+# 🏗 System Architecture
 
-The application follows a layered architecture.
+```
+Controller
+   ↓
+Service Layer
+   ↓
+Repository Layer
+   ↓
+Database
+```
 
-Controller Layer
+### Example Flow
 
-→ Service Layer
-
-→ Repository Layer
-
-→ Database
-
-Example:
-
+```
 EmployeeController
+   ↓
+EmployeeService
+   ↓
+EmployeeRepository
+   ↓
+Employee Model
+```
 
-→ EmployeeService
+### Benefits
 
-→ EmployeeRepository
-
-→ Employee Model
-
-Benefits:
-
-* Separation of Concerns
-* Maintainability
-* Scalability
-* Testability
+* Separation of concerns
+* Scalable structure
+* Easy testing
+* Maintainable codebase
 
 ---
 
-# Design Patterns Used
+# 🧩 Design Patterns
 
 ## Repository Pattern
 
-Repositories abstract database operations from business logic.
-
-Example:
+Handles all database operations.
 
 * BaseRepository
 * EmployeeRepository
-
-Responsibilities:
-
-* CRUD operations
-* Search operations
-* Pagination
-
----
+* UserRepository
 
 ## Service Layer Pattern
 
-Services contain business logic.
-
-Example:
+Handles business logic.
 
 * EmployeeService
 * UserService
 * ExcelService
 
-Responsibilities:
-
-* Authentication
-* Employee Management
-* Excel Import/Export
-
----
-
 ## Dependency Injection
-
-Laravel Service Container is used throughout the application.
-
-Example:
 
 ```php
 public function __construct(
     EmployeeService $service,
     ExcelService $excelService
-)
+) {}
 ```
-
----
 
 ## Factory Pattern
 
-Factories generate test and seed data.
-
-Example:
+Used for test data generation:
 
 * EmployeeFactory
 * UserFactory
 
 ---
 
-# Features
+# ⚡ Features
 
-## Authentication
+## 🔐 Authentication
 
 * Register
 * Login
 * Logout
-* Passport Access Tokens
+* Passport Token Authentication
 
 ---
 
-## Employee Management
+## 👨‍💼 Employee Management
 
 * Create Employee
-* View Employee
+* Read Employee
 * Update Employee
 * Delete Employee
-* Search Employee
+* Search Employees
 * Pagination
 
 ---
 
-## Excel Operations
+## 📊 Excel Features
 
-* Import Employees
+* Import Employees (.xlsx / .csv)
 * Export Employees
 
 ---
 
-## GraphQL
+## 📡 GraphQL API
 
-* Authentication
-* Employee Queries
-* Employee Mutations
-* User Queries
-* User Mutations
+* Authentication Mutations
+* User Queries & Mutations
+* Employee Queries & Mutations
+* Search Operations
 
 ---
 
-# Installation
+# 🌐 API Overview
 
-## Clone Repository
+## REST API Base URL
 
-```bash
-git clone <https://github.com/winmyatphyo99/employee-management>
-
-cd employee management test
+```
+http://127.0.0.1:8000/api
 ```
 
----
+## GraphQL Endpoint
 
-## Install Dependencies
-
-```bash
-composer install
+```
+http://127.0.0.1:8000/graphql
 ```
 
----
+## Playground
 
-## Create Environment File
-
-```bash
-cp .env.example .env
+```
+http://127.0.0.1:8000/graphql-playground
 ```
 
 ---
 
-## Configure Database
+# 📘 API Documentation
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=employee_management
-DB_USERNAME=root
-DB_PASSWORD=
-```
+Full API documentation:
+
+* REST API → `docs/REST_API_DOCUMENTATION.md`
+* GraphQL → `docs/GRAPHQL_DOCUMENTATION.md`
+* Sample Excel File → `/docs/employees.xlsx`
 
 ---
 
-## Generate Application Key
+# 🔐 Authentication
 
-```bash
-php artisan key:generate
-```
-
----
-
-## Run Migrations
-
-```bash
-php artisan migrate
-```
-
----
-
-## Install Passport
-
-```bash
-php artisan passport:install
-```
-
----
-
-## Seed Database
-
-Creates:
-
-* 1 Test User
-* 10,000 Employees
-
-```bash
-php artisan db:seed
-```
-
----
-
-# Default Credentials
-
-Username:
-
-```text
-testuser
-```
-
-Password:
-
-```text
-password
-```
-
----
-
-# Running Application
-
-```bash
-php artisan serve
-```
-
-Application URL:
-
-```text
-http://127.0.0.1:8000
-```
-
----
-
-# Authentication
-
-Protected endpoints require:
+All protected endpoints require:
 
 ```http
 Authorization: Bearer {token}
@@ -282,29 +180,24 @@ Authorization: Bearer {token}
 
 ---
 
-# Database Seed Data
-
-## User
+# 🧪 Default Test User
 
 | Field    | Value                                       |
 | -------- | ------------------------------------------- |
-| username | testuser                                    |
-| email    | [test@example.com](mailto:test@example.com) |
-| password | password                                    |
+| Username | testuser                                    |
+| Password | password                                    |
+| Email    | [test@example.com](mailto:test@example.com) |
 
 ---
 
-## Employees
+# 📦 Database Seed
 
-Generated automatically using Faker.
+* 👤 1 Default User
+* 👨‍💼 10,000 Employees (Faker generated)
 
-Count:
+---
 
-```text
-10000 Employees
-```
-
-Fields:
+# 📊 Employee Fields
 
 * first_name
 * last_name
@@ -315,11 +208,11 @@ Fields:
 
 ---
 
-# Excel Import Format
+# 📥 Excel Import Format
 
 Required columns:
 
-```text
+```
 first_name
 last_name
 email
@@ -330,76 +223,58 @@ salary
 
 ---
 
-# API Documentation
-
-See:
-
-docs/REST_API_DOCUMENTATION.md
-
----
-
-# GraphQL Documentation
-
-See:
-
-docs/GRAPHQL_DOCUMENTATION.md
-
----
-
-# Security
-
-Implemented security measures:
+# 🔐 Security
 
 * Laravel Passport Authentication
 * Password Hashing
-* Form Request Validation
+* Request Validation
 * Protected Routes
 * GraphQL Guards
 
 ---
 
-# Performance Considerations
+# ⚙ Performance Design
 
-* Pagination implemented for employee listing
-* Search filtering at database level
-* Repository abstraction
-* Import uses updateOrCreate to prevent duplicate employees
-* Faker-generated dataset contains 10,000 records
+* Pagination for large datasets
+* Indexed search queries
+* Repository abstraction layer
+* Efficient import (updateOrCreate)
+* Seeder optimized for bulk data
 
 ---
 
-# Testing Checklist
+# 🧪 Testing Checklist
 
-Authentication
+## Authentication
 
-* Register User
-* Login User
-* Logout User
+* Register
+* Login
+* Logout
 
-Employees
+## Employees
 
-* Create Employee
-* Get Employee
-* Update Employee
-* Delete Employee
-* Search Employee
+* Create
+* Read
+* Update
+* Delete
+* Search
 * Pagination
 
-Excel
+## Excel
 
-* Import Employees
-* Export Employees
+* Import
+* Export
 
-GraphQL
+## GraphQL
 
 * Queries
 * Mutations
-* Authentication
+* Auth flow
 
 ---
 
-# Author
+# 👨‍💻 Author
 
-Employee Management Backend API
+Built with Laravel 11 + Passport + Lighthouse GraphQL + Laravel Excel
 
-Built with Laravel 11, Passport, Lighthouse GraphQL, and Laravel Excel.
+Employee Management Backend System
