@@ -16,12 +16,16 @@ class AuthMutation
             'password' => Hash::make($args['password']),
         ]);
 
-        $token = $user->createToken('graphql')->accessToken;
-
+        // $token = $user->createToken('graphql')->accessToken;
         return [
-            'token' => $token,
+            'success' => true,
+            'message' => 'User registered successfully',
             'user' => $user,
         ];
+        // return [
+        //     'token' => $token,
+        //     'user' => $user,
+        // ];
     }
 
     public function login($_, array $args)

@@ -1,0 +1,9 @@
+type ImportResponse {
+    success: Boolean!
+    message: String!
+}
+type RegisterResponse {
+    success: Boolean!
+    message: String!
+    user: User!
+}

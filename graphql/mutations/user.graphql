@@ -1,0 +1,19 @@
+extend type Mutation {
+
+    createUser(input: CreateUserInput! @spread): User
+        @create(model: "App\\Models\\User")
+        @guard(with: ["api"])
+
+    updateUser(
+        id: ID! @whereKey
+        username: String
+        email: String
+        password: String
+    ): User
+        @update(model: "App\\Models\\User")
+        @guard(with: ["api"])
+
+    deleteUser(id: ID! @whereKey): User
+        @delete(model: "App\\Models\\User")
+        @guard(with: ["api"])
+}

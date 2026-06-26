@@ -1,0 +1,17 @@
+extend type Mutation {
+
+    createEmployee(input: CreateEmployeeInput! @spread): Employee
+        @create(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
+
+    updateEmployee(
+        id: ID! @whereKey
+        input: UpdateEmployeeInput! @spread
+    ): Employee
+        @update(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
+
+    deleteEmployee(id: ID! @whereKey): Employee
+        @delete(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
+}

@@ -1,0 +1,44 @@
+input CreateEmployeeInput {
+    first_name: String!
+        @rules(apply: ["required", "string", "max:255"])
+
+    last_name: String!
+        @rules(apply: ["required", "string", "max:255"])
+
+    email: String!
+        @rules(apply: [
+            "required",
+            "email",
+            "max:255",
+            "unique:employees,email"
+        ])
+
+    phone: String
+        @rules(apply: ["nullable", "string", "max:50"])
+
+    address: String
+        @rules(apply: ["nullable", "string", "max:500"])
+
+    salary: Float
+        @rules(apply: ["nullable", "numeric", "min:0"])
+}
+
+input UpdateEmployeeInput {
+    first_name: String
+        @rules(apply: ["string", "max:255"])
+
+    last_name: String
+        @rules(apply: ["string", "max:255"])
+
+    email: String
+        @rules(apply: ["email", "max:255"])
+
+    phone: String
+        @rules(apply: ["string", "max:50"])
+
+    address: String
+        @rules(apply: ["string", "max:500"])
+
+    salary: Float
+        @rules(apply: ["numeric", "min:0"])
+}

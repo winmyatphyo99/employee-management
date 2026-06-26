@@ -1,0 +1,17 @@
+extend type Query {
+
+    me: User
+        @auth(guard: "api")
+
+    users(first: Int!, page: Int): [User!]!
+        @paginate(model: "App\\Models\\User")
+        @guard(with: ["api"])
+
+    user(id: ID! @eq): User
+        @find(model: "App\\Models\\User")
+        @guard(with: ["api"])
+
+    searchUsers(search: String!, first: Int!, page: Int): [User!]!
+        @paginate(scopes: ["search"])
+        @guard(with: ["api"])
+}

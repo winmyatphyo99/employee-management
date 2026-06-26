@@ -1,0 +1,23 @@
+input CreateUserInput {
+    username: String!
+        @rules(apply: [
+            "required",
+            "string",
+            "max:255",
+            "unique:users,username"
+        ])
+
+    email: String!
+        @rules(apply: [
+            "required",
+            "email",
+            "max:255",
+            "unique:users,email"
+        ])
+
+    password: String!
+        @rules(apply: [
+            "required",
+            "min:8"
+        ])
+}

@@ -104,11 +104,12 @@ Authorization: Bearer 1|xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```graphql
 mutation {
   register(
-    username: "john"
-    email: "john@example.com"
-    password: "password123"
+    username: "testuser3"
+    email: "testuser3@mail.com"
+    password: "12345678"
   ) {
-    token
+    success
+    message
     user {
       id
       username
@@ -124,11 +125,12 @@ mutation {
 {
   "data": {
     "register": {
-      "token": "token here",
+      "success": true,
+      "message": "User registered successfully",
       "user": {
-        "id": "21",
-        "username": "johnson",
-        "email": "johnson@example.com"
+        "id": "25",
+        "username": "testuser3",
+        "email": "testuser3@mail.com"
       }
     }
   }

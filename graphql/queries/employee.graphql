@@ -1,0 +1,14 @@
+extend type Query {
+
+    employees(first: Int!, page: Int): [Employee!]!
+        @paginate(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
+
+    employee(id: ID! @eq): Employee
+        @find(model: "App\\Models\\Employee")
+        @guard(with: ["api"])
+
+    searchEmployees(search: String!, first: Int!, page: Int): [Employee!]!
+        @paginate(scopes: ["search"])
+        @guard(with: ["api"])
+}
