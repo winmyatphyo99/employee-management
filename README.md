@@ -167,7 +167,7 @@ Used for generating test data.
 
 ```bash
 git clone <https://github.com/winmyatphyo99/employee-management.git>
-cd employee management test
+cd employee-management
 ```
 
 ## Install Dependencies
